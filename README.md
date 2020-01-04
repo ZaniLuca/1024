@@ -4,6 +4,7 @@ i controlli sono molto semplici e intuitivi: si utilizzano le frecce direzionali
 
 ## Screenshots
 
+![Screenshot](https://user-images.githubusercontent.com/59318963/71765966-d47ec180-2efa-11ea-8bf8-bc92fb657d95.png)
 
 l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibile andare avanti per cercare di ottenere il punteggio più alto possibile!
 
