@@ -8,6 +8,10 @@ i controlli sono molto semplici e intuitivi: si utilizzano le frecce direzionali
 l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibile andare avanti per cercare di ottenere il punteggio più alto possibile!
 
 ## Changelog
+
+#### **Version 2.5**
+- Added sound
+- Pause the game when lost
 ### **Version 2.0**
 - All game wrote in an object oriented way
 - Better code
@@ -19,4 +23,4 @@ l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibi
 
 ### **Coming Soon**
 - [ ] Highscore system
-- [ ] Sound
+- [x] Sound
