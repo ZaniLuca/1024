@@ -64,7 +64,7 @@ class Square:
         based on the given parameters
         :param i: int
         :param j: int
-        :param grid: vector
+        :param grid: list
         :return: int
         """
         for square in range(len(grid)):
@@ -75,50 +75,62 @@ class Square:
     def checkTop(self, grid):
         """
         Check for the top,right,bottom,left cells
-        :param grid: vector
-        :return: None
+        :param grid: list
+        :return: bool, True if moved, False instead
         """
         index = self.searchIndex(self.i, self.j - 1, grid)
         if index >= 0:
             top = grid[index]
-            if self.value == top.value:
+            if self.value == top.value and top.value != 0:
                 # Set Value
                 top.value *= 2
                 self.value = 0
+                pygame.mixer.music.play()
             elif top.value == 0:
                 # Merge
                 top.value = self.value
                 self.value = 0
+            return True
+        return False
 
     def checkRight(self, grid):
         index = self.searchIndex(self.i + 1, self.j, grid)
         if index >= 0:
             right = grid[index]
-            if self.value == right.value:
+            if self.value == right.value and right.value != 0:
                 right.value *= 2
                 self.value = 0
+                pygame.mixer.music.play()
             elif right.value == 0:
                 right.value = self.value
                 self.value = 0
+            return True
+        return False
 
     def checkLeft(self, grid):
         index = self.searchIndex(self.i - 1, self.j, grid)
         if index >= 0:
             left = grid[index]
-            if self.value == left.value:
+            if self.value == left.value and left.value != 0:
                 left.value *= 2
                 self.value = 0
+                pygame.mixer.music.play()
             elif left.value == 0:
                 left.value = self.value
                 self.value = 0
+            return True
+        return False
 
     def checkDown(self, grid):
         index = self.searchIndex(self.i, self.j + 1, grid)
         if index >= 0:
             down = grid[index]
-            if self.value == down.value:
+            if self.value == down.value and down.value != 0:
                 down.value *= 2
                 self.value = 0
+                pygame.mixer.music.play()
             elif down.value == 0:
                 down.value = self.value
                 self.value = 0
+            return True
+        return False

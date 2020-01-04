@@ -16,17 +16,21 @@ class Game:
         self.height = 500
         self.w = 100
         self.fps = 30
+        self.screen = pygame.display.set_mode((self.width, self.height))
         self.logo = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Logo.ico'))
         self.font = pygame.font.Font(os.path.join(os.path.dirname(__file__), 'ClearSans.ttf'), 38)
+        self.clak = pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), 'clak.wav'))
         self.grid = []
         self.score = 0
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.lost = False
 
         pygame.display.set_caption('1024 in python')
         pygame.display.set_icon(self.logo)
 
     def run(self):
         self.createGrid()
+        # Generate 2 cells
+        self.random2()
         self.random2()
         clock = pygame.time.Clock()
         run = True
@@ -36,31 +40,40 @@ class Game:
             self.getPoints()
             score_text = self.font.render('Score:', True, TEXT_COLOR1)
             points_text = self.font.render(str(self.score), True, TEXT_COLOR1)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        for square in range(len(self.grid)):
-                            for square2 in range(len(self.grid)):
-                                self.grid[square2].checkTop(self.grid)
-                        self.random2()
-                    elif event.key == pygame.K_RIGHT:
-                        for square in range(len(self.grid)):
-                            for square2 in range(len(self.grid)):
-                                self.grid[square2].checkRight(self.grid)
-                        self.random2()
-                    elif event.key == pygame.K_DOWN:
-                        for square in range(len(self.grid)):
-                            for square2 in range(len(self.grid)):
-                                self.grid[square2].checkDown(self.grid)
-                        self.random2()
-                    elif event.key == pygame.K_LEFT:
-                        for square in range(len(self.grid)):
-                            for square2 in range(len(self.grid)):
-                                self.grid[square2].checkLeft(self.grid)
-                        self.random2()
+                if not self.lost:
+                    if event.type == pygame.KEYDOWN:
+                        # TODO rewrite loop
+                        if event.key == pygame.K_UP:
+                            for square in range(len(self.grid)):
+                                for square2 in range(len(self.grid)):
+                                    moved = self.grid[square2].checkTop(self.grid)
+                            if moved:
+                                self.random2()
+                            self.check_lost()
+                        elif event.key == pygame.K_RIGHT:
+                            for square in range(len(self.grid)):
+                                for square2 in range(len(self.grid)):
+                                    moved = self.grid[square2].checkRight(self.grid)
+                            if moved:
+                                self.random2()
+                            self.check_lost()
+                        elif event.key == pygame.K_DOWN:
+                            for square in range(len(self.grid)):
+                                for square2 in range(len(self.grid)):
+                                    moved = self.grid[square2].checkDown(self.grid)
+                            if moved:
+                                self.random2()
+                            self.check_lost()
+                        elif event.key == pygame.K_LEFT:
+                            for square in range(len(self.grid)):
+                                for square2 in range(len(self.grid)):
+                                    moved = self.grid[square2].checkLeft(self.grid)
+                            if moved:
+                                self.random2()
+                            self.check_lost()
             self.update(score_text, points_text)
         pygame.quit()
 
@@ -126,6 +139,18 @@ class Game:
         self.score = 0
         for cell in range(len(self.grid)):
             self.score += 2 * self.grid[cell].value
+
+    def check_lost(self):
+        """
+        Checks if the player loses
+        :return: None
+        """
+        filled_cells = 0
+        for square in range(len(self.grid)):
+            if self.grid[square].value > 0:
+                filled_cells += 1
+            if filled_cells == 16:
+                self.lost = True
 
 
 game = Game()
