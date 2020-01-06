@@ -219,6 +219,7 @@ class Game:
     def restart(self):
         self.grid = []
         self.lost = False
+        self.score = 0
         self.create_grid()
         self.random2()
         self.random2()
