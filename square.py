@@ -23,7 +23,6 @@ class Square:
         rect = pygame.Rect(x, y, W, W)
         pygame.draw.rect(screen, BG, rect)
         if self.new:
-            # TODO better popup animation
             if self.value > 0:
                 rect.inflate(-50, -50)
                 pygame.draw.rect(screen, SqrColors[self.value], rect)
@@ -35,7 +34,7 @@ class Square:
                 pygame.draw.rect(screen, SqrColors[self.value], rect)
             pygame.draw.rect(screen, BORDER, rect, 10)
 
-    def showValue(self, screen, font, W):
+    def display_value(self, screen, font, W):
         """
         Display the value of the square
         :param screen: surface
@@ -64,82 +63,30 @@ class Square:
                 return square
         return -1
 
-    def checkTop(self, grid, can_merge):
+    def move(self, grid, can_merge, move_dir):
         """
-        Check for the top,right,bottom,left cells
+        moves every cell to the given destination,
+        can merge cells into each others
         :param grid: list
         :param can_merge: bool
+        :param move_dir: tuple
         :return: bool (True if we moved a cell)
         :return: bool (True if we merged a cell into another)
         :return: int  (points)
         """
-        index = self.search_index(self.i, self.j - 1, grid)
+        index = self.search_index(self.i + move_dir[0], self.j + move_dir[1], grid)
         if index >= 0:
-            top = grid[index]
-            if self.value == top.value and top.value != 0 and can_merge:
-                top.value *= 2
-                top.new = True
+            cell = grid[index]
+            if self.value == cell.value and cell.value != 0 and can_merge and not self.new:
+                cell.value *= 2
+                cell.new = True
                 self.value = 0
                 pygame.mixer.music.play()
-                return True, True, top.value
-            elif top.value == 0:
-                top.value = self.value
+                return True, True, cell.value
+            elif cell.value == 0:
+                cell.value = self.value
                 self.value = 0
-                if top.value == 0:
-                    return False, False, 0
-                return True, False, 0
-        return False, False, 0
-
-    def checkRight(self, grid, can_merge):
-        index = self.search_index(self.i + 1, self.j, grid)
-        if index >= 0:
-            right = grid[index]
-            if self.value == right.value and right.value != 0 and can_merge:
-                right.value *= 2
-                right.new = True
-                self.value = 0
-                pygame.mixer.music.play()
-                return True, True, right.value
-            elif right.value == 0:
-                right.value = self.value
-                self.value = 0
-                if right.value == 0:
-                    return False, False, 0
-                return True, False, 0
-        return False, False, 0
-
-    def checkLeft(self, grid, can_merge):
-        index = self.search_index(self.i - 1, self.j, grid)
-        if index >= 0:
-            left = grid[index]
-            if self.value == left.value and left.value != 0 and can_merge:
-                left.value *= 2
-                left.new = True
-                self.value = 0
-                pygame.mixer.music.play()
-                return True, True, left.value
-            elif left.value == 0:
-                left.value = self.value
-                self.value = 0
-                if left.value == 0:
-                    return False, False, 0
-                return True, False, 0
-        return False, False, 0
-
-    def checkDown(self, grid, can_merge):
-        index = self.search_index(self.i, self.j + 1, grid)
-        if index >= 0:
-            down = grid[index]
-            if self.value == down.value and down.value != 0 and can_merge:
-                down.value *= 2
-                down.new = True
-                self.value = 0
-                pygame.mixer.music.play()
-                return True, True, down.value
-            elif down.value == 0:
-                down.value = self.value
-                self.value = 0
-                if down.value == 0:
+                if cell.value == 0:
                     return False, False, 0
                 return True, False, 0
         return False, False, 0
