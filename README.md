@@ -29,8 +29,5 @@ l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibi
 - Badly optimized code
 
 ### **Coming Soon**
-- Better popup animation
 - Fixed some merge bugs
-- Win screen
 - Highscore system
-- Sound
