@@ -1,8 +1,19 @@
 #!/usr/local/bin/python3.8
+"""
+1024 game by Luca Zani
+https://github.com/ZaniLuca/1024
+
+1024 è un videogioco libero a giocatore singolo il cui obiettivo è quello di far scorrere le piastrelle su una griglia,
+unirle e creare una tessera con il numero 1024 i controlli sono molto semplici e intuitivi:
+si utilizzano le frecce direzionali per far "scivolare" i blocchi che,
+qualora vengano a contatto con blocchi dello stesso valore si uniranno.
+"""
+
 import pygame
 
 pygame.init()
 pygame.mixer.init()
+pygame.display.init()
 pygame.font.init()
 
 from square import *
@@ -15,65 +26,94 @@ class Game:
         self.width = 400
         self.height = 500
         self.w = 100
-        self.fps = 30
+        self.fps = 15
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.logo = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Logo.ico'))
-        self.font = pygame.font.Font(os.path.join(os.path.dirname(__file__), 'ClearSans.ttf'), 38)
+        self.font_38 = pygame.font.Font(os.path.join(os.path.dirname(__file__), 'ClearSans.ttf'), 38)
+        self.font_24 = pygame.font.Font(os.path.join(os.path.dirname(__file__), 'ClearSans.ttf'), 24)
         self.clak = pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), 'clak.wav'))
         self.grid = []
         self.score = 0
+        self.highscore = 0
         self.lost = False
 
         pygame.display.set_caption('1024 in python')
         pygame.display.set_icon(self.logo)
 
     def run(self):
-        self.createGrid()
-        # Generate 2 cells
+        self.create_grid()
         self.random2()
         self.random2()
         clock = pygame.time.Clock()
         run = True
         while run:
+            moved_list = []
+            merged_list = []
             clock.tick(self.fps)
-
-            self.getPoints()
-            score_text = self.font.render('Score:', True, TEXT_COLOR1)
-            points_text = self.font.render(str(self.score), True, TEXT_COLOR1)
+            # TODO implement highscore
+            score_text = self.font_38.render('Score:', True, TEXT_COLOR1)
+            points_text = self.font_38.render(str(self.score), True, TEXT_COLOR1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                 if not self.lost:
                     if event.type == pygame.KEYDOWN:
-                        # TODO rewrite loop
                         if event.key == pygame.K_UP:
-                            for square in range(len(self.grid)):
-                                for square2 in range(len(self.grid)):
-                                    moved = self.grid[square2].checkTop(self.grid)
-                            if moved:
+                            for maincicle in range(3):
+                                for square in range(len(self.grid)):
+                                    # TODO fix merge problem
+                                    can_merge = self.merge_checker(merged_list)
+                                    moved, merged, points = self.grid[square].checkTop(self.grid, can_merge)
+                                    merged_list.append(merged)
+                                    moved_list.append(moved)
+                                    self.score += points
+                            if self.check_moved(moved_list):
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_RIGHT:
-                            for square in range(len(self.grid)):
-                                for square2 in range(len(self.grid)):
-                                    moved = self.grid[square2].checkRight(self.grid)
-                            if moved:
+                            for maincicle in range(3):
+                                for square in range(len(self.grid)):
+                                    if self.merge_checker(merged_list):
+                                        can_merge = self.merge_checker(merged_list)
+                                        moved, merged, points = self.grid[square].checkRight(self.grid, can_merge)
+                                        merged_list.append(merged)
+                                        moved_list.append(moved)
+                                        self.score += points
+                            if self.check_moved(moved_list):
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_DOWN:
-                            for square in range(len(self.grid)):
-                                for square2 in range(len(self.grid)):
-                                    moved = self.grid[square2].checkDown(self.grid)
-                            if moved:
+                            for maincicle in range(3):
+                                for square in range(len(self.grid)):
+                                    if self.merge_checker(merged_list):
+                                        can_merge = self.merge_checker(merged_list)
+                                        moved, merged, points = self.grid[square].checkDown(self.grid, can_merge)
+                                        merged_list.append(merged)
+                                        moved_list.append(moved)
+                                        self.score += points
+                            if self.check_moved(moved_list):
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_LEFT:
-                            for square in range(len(self.grid)):
-                                for square2 in range(len(self.grid)):
-                                    moved = self.grid[square2].checkLeft(self.grid)
-                            if moved:
+                            for maincicle in range(3):
+                                for square in range(len(self.grid)):
+                                    if self.merge_checker(merged_list):
+                                        can_merge = self.merge_checker(merged_list)
+                                        moved, merged, points = self.grid[square].checkLeft(self.grid, can_merge)
+                                        merged_list.append(merged)
+                                        moved_list.append(moved)
+                                        self.score += points
+                            if self.check_moved(moved_list):
                                 self.random2()
                             self.check_lost()
+                else:
+                    mouse_pressed = pygame.mouse.get_pressed()
+                    pos = pygame.mouse.get_pos()
+                    left_click = mouse_pressed[0]
+                    if left_click == 1:
+                        if 142 < pos[0] < 262:
+                            if 230 < pos[1] < 270:
+                                self.restart()
             self.update(score_text, points_text)
         pygame.quit()
 
@@ -88,13 +128,29 @@ class Game:
         self.screen.fill((255, 255, 255))
         for i in range(len(self.grid)):
             self.grid[i].show(self.w, self.screen)
-            self.grid[i].showValue(self.screen, self.font, self.w)
+            self.grid[i].showValue(self.screen, self.font_38, self.w)
+        if self.lost:
+            transp_fg = pygame.Surface((400, 400))
+            transp_fg.fill((240, 192, 0))
+            transp_fg.set_alpha(128)
+            # Lost Text
+            lost_text = self.font_38.render('You Lost', True, TEXT_COLOR2)
+            lost_text_rect = lost_text.get_rect(center=(400 // 2, 400 // 2 - 30))
+            # Retry box
+            retry_rect = pygame.Rect(400 // 2 - 57, 400 // 2 + 30, 120, 40)
+            retry_text = self.font_24.render('Retry', True, TEXT_COLOR2)
+            retry_text_rect = retry_text.get_rect(center=(400 // 2 + 4, 400 // 2 + 48))
+            # Blitting
+            self.screen.blit(transp_fg, (0, 0))
+            self.screen.blit(lost_text, lost_text_rect)
+            pygame.draw.rect(self.screen, TEXT_COLOR1, retry_rect)
+            self.screen.blit(retry_text, retry_text_rect)
         self.screen.blit(self.logo, (335, 435))
         self.screen.blit(score_text, (30, 425))
         self.screen.blit(points_text, (150, 425))
         pygame.display.flip()
 
-    def createGrid(self):
+    def create_grid(self):
         """
         Creates the whole grid
         :return: None
@@ -104,17 +160,6 @@ class Game:
                 square = Square(i, j)
                 self.grid.append(square)
 
-    def pickRandomSquare(self):
-        """
-        Gets a random square to place the new cell
-        containing 2
-        :return: 2 random integers between 0 and 4
-        """
-        random_i = int(random.randrange(0, 4))
-        random_j = int(random.randrange(0, 4))
-
-        return random_i, random_j
-
     def random2(self):
         """
         Tries 1000 times to place a 2 in the grid
@@ -123,22 +168,15 @@ class Game:
         tries = 0
         found = 0
         while found == 0 and tries < 1000:
-            i, j = self.pickRandomSquare()
+            i = int(random.randrange(0, 4))
+            j = int(random.randrange(0, 4))
             for cell in range(len(self.grid)):
                 if self.grid[cell].i == i and self.grid[cell].j == j and self.grid[cell].value == 0:
                     found = 1
                     self.grid[cell].value = 2
+                    self.grid[cell].new = True
                 else:
                     tries += 1
-
-    def getPoints(self):
-        """
-        Calculate the score
-        :return: None
-        """
-        self.score = 0
-        for cell in range(len(self.grid)):
-            self.score += 2 * self.grid[cell].value
 
     def check_lost(self):
         """
@@ -151,6 +189,39 @@ class Game:
                 filled_cells += 1
             if filled_cells == 16:
                 self.lost = True
+
+    def check_moved(self, moved_list):
+        """
+        checks if at least one square moved
+        :param moved_list: list
+        :return: bool
+        """
+        for item in range(len(moved_list)):
+            if moved_list[item]:
+                return True
+        return False
+
+    def merge_checker(self, merged_list):
+        """
+        checks if we haven't merged more than 2 times
+        :param merged_list: list
+        :return: bool
+        """
+        merge_checks = 0
+        for item in range(len(merged_list)):
+            if merge_checks < 2:
+                if merged_list[item]:
+                    merge_checks += 1
+            else:
+                return False
+        return True
+
+    def restart(self):
+        self.grid = []
+        self.lost = False
+        self.create_grid()
+        self.random2()
+        self.random2()
 
 
 game = Game()

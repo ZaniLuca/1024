@@ -9,6 +9,7 @@ class Square:
         self.i = i
         self.j = j
         self.value = 0
+        self.new = False
 
     def show(self, W, screen):
         """
@@ -21,27 +22,18 @@ class Square:
         y = self.j * W
         rect = pygame.Rect(x, y, W, W)
         pygame.draw.rect(screen, BG, rect)
-        if self.value == 2:
-            pygame.draw.rect(screen, Sqr2, rect)
-        elif self.value == 4:
-            pygame.draw.rect(screen, Sqr4, rect)
-        elif self.value == 8:
-            pygame.draw.rect(screen, Sqr8, rect)
-        elif self.value == 16:
-            pygame.draw.rect(screen, Sqr16, rect)
-        elif self.value == 32:
-            pygame.draw.rect(screen, Sqr32, rect)
-        elif self.value == 64:
-            pygame.draw.rect(screen, Sqr64, rect)
-        elif self.value == 128:
-            pygame.draw.rect(screen, Sqr128, rect)
-        elif self.value == 256:
-            pygame.draw.rect(screen, Sqr256, rect)
-        elif self.value == 512:
-            pygame.draw.rect(screen, Sqr512, rect)
-        elif self.value == 1024:
-            pygame.draw.rect(screen, Sqr1024, rect)
-        pygame.draw.rect(screen, BORDER, rect, 10)
+        if self.new:
+            # TODO better popup animation
+            if self.value > 0:
+                rect.inflate(-50, -50)
+                pygame.draw.rect(screen, SqrColors[self.value], rect)
+                rect.inflate(10, 10)
+                pygame.draw.rect(screen, SqrColors[self.value], rect)
+            self.new = False
+        else:
+            if self.value > 0:
+                pygame.draw.rect(screen, SqrColors[self.value], rect)
+            pygame.draw.rect(screen, BORDER, rect, 10)
 
     def showValue(self, screen, font, W):
         """
@@ -58,7 +50,7 @@ class Square:
             text_rect = textsurface.get_rect(center=(W * self.i + 1 // 2 + 50, W * self.j + 1 // 2 + 50))
             screen.blit(textsurface, text_rect)
 
-    def searchIndex(self, i, j, grid):
+    def search_index(self, i, j, grid):
         """
         Search the cell's index in the vector
         based on the given parameters
@@ -72,65 +64,82 @@ class Square:
                 return square
         return -1
 
-    def checkTop(self, grid):
+    def checkTop(self, grid, can_merge):
         """
         Check for the top,right,bottom,left cells
         :param grid: list
-        :return: bool, True if moved, False instead
+        :param can_merge: bool
+        :return: bool (True if we moved a cell)
+        :return: bool (True if we merged a cell into another)
+        :return: int  (points)
         """
-        index = self.searchIndex(self.i, self.j - 1, grid)
+        index = self.search_index(self.i, self.j - 1, grid)
         if index >= 0:
             top = grid[index]
-            if self.value == top.value and top.value != 0:
-                # Set Value
+            if self.value == top.value and top.value != 0 and can_merge:
                 top.value *= 2
+                top.new = True
                 self.value = 0
                 pygame.mixer.music.play()
+                return True, True, top.value
             elif top.value == 0:
-                # Merge
                 top.value = self.value
                 self.value = 0
-            return True
-        return False
+                if top.value == 0:
+                    return False, False, 0
+                return True, False, 0
+        return False, False, 0
 
-    def checkRight(self, grid):
-        index = self.searchIndex(self.i + 1, self.j, grid)
+    def checkRight(self, grid, can_merge):
+        index = self.search_index(self.i + 1, self.j, grid)
         if index >= 0:
             right = grid[index]
-            if self.value == right.value and right.value != 0:
+            if self.value == right.value and right.value != 0 and can_merge:
                 right.value *= 2
+                right.new = True
                 self.value = 0
                 pygame.mixer.music.play()
+                return True, True, right.value
             elif right.value == 0:
                 right.value = self.value
                 self.value = 0
-            return True
-        return False
+                if right.value == 0:
+                    return False, False, 0
+                return True, False, 0
+        return False, False, 0
 
-    def checkLeft(self, grid):
-        index = self.searchIndex(self.i - 1, self.j, grid)
+    def checkLeft(self, grid, can_merge):
+        index = self.search_index(self.i - 1, self.j, grid)
         if index >= 0:
             left = grid[index]
-            if self.value == left.value and left.value != 0:
+            if self.value == left.value and left.value != 0 and can_merge:
                 left.value *= 2
+                left.new = True
                 self.value = 0
                 pygame.mixer.music.play()
+                return True, True, left.value
             elif left.value == 0:
                 left.value = self.value
                 self.value = 0
-            return True
-        return False
+                if left.value == 0:
+                    return False, False, 0
+                return True, False, 0
+        return False, False, 0
 
-    def checkDown(self, grid):
-        index = self.searchIndex(self.i, self.j + 1, grid)
+    def checkDown(self, grid, can_merge):
+        index = self.search_index(self.i, self.j + 1, grid)
         if index >= 0:
             down = grid[index]
-            if self.value == down.value and down.value != 0:
+            if self.value == down.value and down.value != 0 and can_merge:
                 down.value *= 2
+                down.new = True
                 self.value = 0
                 pygame.mixer.music.play()
+                return True, True, down.value
             elif down.value == 0:
                 down.value = self.value
                 self.value = 0
-            return True
-        return False
+                if down.value == 0:
+                    return False, False, 0
+                return True, False, 0
+        return False, False, 0
