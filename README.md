@@ -4,24 +4,33 @@ i controlli sono molto semplici e intuitivi: si utilizzano le frecce direzionali
 
 ## Screenshots
 
-![Screenshot](https://user-images.githubusercontent.com/59318963/71765966-d47ec180-2efa-11ea-8bf8-bc92fb657d95.png)
+![Screenshot](https://user-images.githubusercontent.com/59318963/71765966-d47ec180-2efa-11ea-8bf8-bc92fb657d95.png) 
+![lost_screen](https://user-images.githubusercontent.com/59318963/71812631-f782b000-3077-11ea-9cd8-351a71d8eda7.PNG)
 
 l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibile andare avanti per cercare di ottenere il punteggio più alto possibile!
 
 ## Changelog
 
-#### **Version 2.5**
+### **Version 3.0**
+- Added animation when a cell merge or when a new one is created
+- Better code
+- improved points system
+- added retry button and lost screen
+##### **Version 2.5**
 - Added sound
 - Pause the game when lost
 ### **Version 2.0**
 - All game wrote in an object oriented way
 - Better code
-- Added comments 
+- Added comments and docs for functions
 
 ### **Version 1.0**
 - First relase of the game
 - Badly optimized code
 
 ### **Coming Soon**
-- [ ] Highscore system
-- [x] Sound
+- Better popup animation
+- Fixed some merge bugs
+- Win screen
+- Highscore system
+- Sound
