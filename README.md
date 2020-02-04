@@ -9,25 +9,3 @@ i controlli sono molto semplici e intuitivi: si utilizzano le frecce direzionali
 
 l'obbiettivo del gioco è raggiungere 1024 punti, una volta raggiunti è possibile andare avanti per cercare di ottenere il punteggio più alto possibile!
 
-## Changelog
-
-### **Version 3.0**
-- Added animation when a cell merge or when a new one is created
-- Better code
-- improved points system
-- added retry button and lost screen
-##### **Version 2.5**
-- Added sound
-- Pause the game when lost
-### **Version 2.0**
-- All game wrote in an object oriented way
-- Better code
-- Added comments and docs for functions
-
-### **Version 1.0**
-- First relase of the game
-- Badly optimized code
-
-### **Coming Soon**
-- Fixed some merge bugs
-- Highscore system

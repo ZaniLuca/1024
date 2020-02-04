@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3.8
 import pygame
 
-from colors import *
+from Colors import *
 
 
 class Square:
