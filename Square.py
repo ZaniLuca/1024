@@ -74,19 +74,20 @@ class Square:
         :return: bool (True if we merged a cell into another)
         :return: int  (points)
         """
-        index = self.search_index(self.i + move_dir[0], self.j + move_dir[1], grid)
-        if index >= 0:
-            cell = grid[index]
-            if self.value == cell.value and cell.value != 0 and can_merge and not self.new:
-                cell.value *= 2
-                cell.new = True
-                self.value = 0
-                pygame.mixer.music.play()
-                return True, True, cell.value
-            elif cell.value == 0:
-                cell.value = self.value
-                self.value = 0
-                if cell.value == 0:
-                    return False, False, 0
-                return True, False, 0
+        # index = self.search_index(self.i + move_dir[0], self.j + move_dir[1], grid)
+        if 0 <= self.i + move_dir[0] < 4:
+            if 0 <= self.j + move_dir[1] < 4:
+                cell = grid[self.i + move_dir[0]][self.j + move_dir[1]]
+                if self.value == cell.value and cell.value != 0 and can_merge and not self.new:
+                    cell.value *= 2
+                    cell.new = True
+                    self.value = 0
+                    pygame.mixer.music.play()
+                    return True, True, cell.value
+                elif cell.value == 0:
+                    cell.value = self.value
+                    self.value = 0
+                    if cell.value == 0:
+                        return False, False, 0
+                    return True, False, 0
         return False, False, 0
