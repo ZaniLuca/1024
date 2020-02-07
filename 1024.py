@@ -45,7 +45,7 @@ class Game:
         clock = pygame.time.Clock()
         run = True
         while run:
-            moved_list = []
+            moved_list = []  # Vector of booleans that
             clock.tick(self.fps)
             # TODO implement highscore
             score_text = self.font_38.render('Score:', True, TEXT_COLOR1)
@@ -53,18 +53,31 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+
                 if not self.lost:
+
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
-                            for line in range(3):
+                            for line in range(3):  # this loops 2 times
                                 for square in range(len(self.grid)):
+                                    # Direction of the movement, move_dir[0] == col, move_dir[1] == row
                                     move_dir = (0, -1)
+
+                                    # If we actually moved the cell we get True as a return value
+                                    # the we append it to the moved array
                                     moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
+
+                                    # finally we update the points
                                     self.score += points
+
+                            # Only if we moved we can add a new 2
                             if True in moved_list:
                                 self.random2()
+
+                            # Every mouse press we also check if we lost
                             self.check_lost()
+
                         elif event.key == pygame.K_RIGHT:
                             for line in range(3):
                                 for square in range(len(self.grid) - 1, -1, -1):
@@ -72,9 +85,11 @@ class Game:
                                     moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
+
                             if True in moved_list:
                                 self.random2()
                             self.check_lost()
+
                         elif event.key == pygame.K_DOWN:
                             for line in range(3):
                                 for square in range(len(self.grid) - 1, -1, -1):
@@ -82,9 +97,11 @@ class Game:
                                     moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
+
                             if True in moved_list:
                                 self.random2()
                             self.check_lost()
+
                         elif event.key == pygame.K_LEFT:
                             for line in range(3):
                                 for square in range(len(self.grid)):
@@ -92,17 +109,22 @@ class Game:
                                     moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
+
                             if True in moved_list:
                                 self.random2()
                             self.check_lost()
                 else:
+                    # if the current game is lost a screen pops up and we check for the
+                    # retry button press
                     mouse_pressed = pygame.mouse.get_pressed()
                     pos = pygame.mouse.get_pos()
                     left_click = mouse_pressed[0]
+
                     if left_click == 1:
                         if 142 < pos[0] < 262:
                             if 230 < pos[1] < 270:
                                 self.restart()
+
             self.update(score_text, points_text)
         pygame.quit()
 
@@ -115,28 +137,37 @@ class Game:
         :return: None
         """
         self.screen.fill((255, 255, 255))
+
+        # Display all the grid
         for i in range(len(self.grid)):
             self.grid[i].show(self.w, self.screen)
             self.grid[i].display_value(self.screen, self.font_38, self.w)
+
         if self.lost:
+            # Creating the lost screen
             transp_fg = pygame.Surface((400, 400))
             transp_fg.fill((240, 192, 0))
             transp_fg.set_alpha(128)
+
             # Lost Text
             lost_text = self.font_38.render('You Lost', True, TEXT_COLOR2)
             lost_text_rect = lost_text.get_rect(center=(400 // 2, 400 // 2 - 30))
+
             # Retry box
             retry_rect = pygame.Rect(400 // 2 - 57, 400 // 2 + 30, 120, 40)
             retry_text = self.font_24.render('Retry', True, TEXT_COLOR2)
             retry_text_rect = retry_text.get_rect(center=(400 // 2 + 4, 400 // 2 + 48))
+
             # Blitting
             self.screen.blit(transp_fg, (0, 0))
             self.screen.blit(lost_text, lost_text_rect)
             pygame.draw.rect(self.screen, TEXT_COLOR1, retry_rect)
             self.screen.blit(retry_text, retry_text_rect)
+
         self.screen.blit(self.logo, (335, 435))
         self.screen.blit(score_text, (30, 425))
         self.screen.blit(points_text, (150, 425))
+
         pygame.display.flip()
 
     def create_grid(self):

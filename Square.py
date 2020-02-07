@@ -3,6 +3,7 @@ from Colors import *
 
 
 class Square:
+
     def __init__(self, i, j):
         self.i = i
         self.j = j
@@ -44,6 +45,7 @@ class Square:
             textsurface = font.render(str(self.value), True, TEXT_COLOR1)
             if self.value > 4:
                 textsurface = font.render(str(self.value), True, TEXT_COLOR2)
+
             text_rect = textsurface.get_rect(center=(w * self.i + 1 // 2 + 50, w * self.j + 1 // 2 + 50))
             screen.blit(textsurface, text_rect)
 
@@ -73,12 +75,14 @@ class Square:
         index = self.search_index(self.i + move_dir[0], self.j + move_dir[1], grid)
         if index >= 0:
             cell = grid[index]
+            # Check if can merge
             if self.value == cell.value and cell.value != 0 and not self.new:
                 cell.value *= 2
                 cell.new = True
                 self.value = 0
                 pygame.mixer.music.play()
                 return True, cell.value
+            # Move cell to next
             elif cell.value == 0:
                 cell.value = self.value
                 self.value = 0
