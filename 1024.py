@@ -46,7 +46,6 @@ class Game:
         run = True
         while run:
             moved_list = []
-            merged_list = []
             clock.tick(self.fps)
             # TODO implement highscore
             score_text = self.font_38.render('Score:', True, TEXT_COLOR1)
@@ -55,54 +54,45 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
                 if not self.lost:
-                    # TODO resolve merge problem
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
                             for line in range(3):
                                 for square in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
                                     move_dir = (0, -1)
-                                    moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+                                    moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_RIGHT:
                             for line in range(3):
-                                for square in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
+                                for square in range(len(self.grid) - 1, -1, -1):
                                     move_dir = (1, 0)
-                                    moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+                                    moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_DOWN:
                             for line in range(3):
-                                for square in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
+                                for square in range(len(self.grid) - 1, -1, -1):
                                     move_dir = (0, 1)
-                                    moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+                                    moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_LEFT:
                             for line in range(3):
                                 for square in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
                                     move_dir = (-1, 0)
-                                    moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+                                    moved, points = self.grid[square].move(self.grid, move_dir)
                                     moved_list.append(moved)
                                     self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                 else:
@@ -188,32 +178,6 @@ class Game:
                 filled_cells += 1
             if filled_cells == 16:
                 self.lost = True
-
-    def check_moved(self, moved_list):
-        """
-        checks if at least one square moved
-        :param moved_list: list
-        :return: bool
-        """
-        for item in range(len(moved_list)):
-            if moved_list[item]:
-                return True
-        return False
-
-    def merge_checker(self, merged_list):
-        """
-        checks if we haven't merged more than 2 times
-        :param merged_list: list
-        :return: bool
-        """
-        merge_checks = 0
-        for item in range(0, len(merged_list), 4):
-            if merge_checks < 2:
-                if merged_list[item]:
-                    merge_checks += 1
-            else:
-                return False
-        return True
 
     def restart(self):
         self.grid = []
