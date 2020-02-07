@@ -55,7 +55,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
                 if not self.lost:
-                    # TODO resolve merge problem
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
                             for line in range(3):
@@ -75,33 +74,33 @@ class Game:
                                 self.random2()
                             # self.check_lost()
                         elif event.key == pygame.K_RIGHT:
-                            # for line in range(3):
-                            for i in range(len(self.grid)):
-                                for j in range(len(self.grid)):
-                                    move_dir = (1, 0)
+                            for line in range(3):
+                                for i in range(len(self.grid) - 1, -1, -1):
+                                    for j in range(len(self.grid) - 1, -1, -1):
+                                        move_dir = (1, 0)
 
-                                    moved = self.grid[i][j].moves(self.grid, move_dir)
-                                    moved_list.append(moved)
+                                        moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        moved_list.append(moved)
 
-                                    merged, points = self.grid[i][j].merge(self.grid, move_dir)
-                                    self.score += points
-                                    merged_list.append(merged)
+                                        merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        self.score += points
+                                        merged_list.append(merged)
 
                             if True in moved_list:
                                 self.random2()
-                            #self.check_lost()
+                            # self.check_lost()
                         elif event.key == pygame.K_DOWN:
-                            #for line in range(3):
-                            for i in range(len(self.grid)):
-                                for j in range(len(self.grid)):
-                                    move_dir = (0, 1)
+                            for line in range(3):
+                                for i in range(len(self.grid) - 1, -1, -1):
+                                    for j in range(len(self.grid) - 1, -1, -1):
+                                        move_dir = (0, 1)
 
-                                    moved = self.grid[i][j].moves(self.grid, move_dir)
-                                    moved_list.append(moved)
+                                        moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        moved_list.append(moved)
 
-                                    merged, points = self.grid[i][j].merge(self.grid, move_dir)
-                                    self.score += points
-                                    merged_list.append(merged)
+                                        merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        self.score += points
+                                        merged_list.append(merged)
 
                             if True in moved_list:
                                 self.random2()
