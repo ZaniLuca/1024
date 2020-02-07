@@ -74,7 +74,7 @@ class Game:
                                 #     merged_list.append(merged)
                                 #     moved_list.append(moved)
                                 #     self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_RIGHT:
@@ -94,7 +94,7 @@ class Game:
                             #         merged_list.append(merged)
                             #         moved_list.append(moved)
                             #         self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_DOWN:
@@ -114,7 +114,7 @@ class Game:
                             #         merged_list.append(merged)
                             #         moved_list.append(moved)
                             #         self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                         elif event.key == pygame.K_LEFT:
@@ -134,7 +134,7 @@ class Game:
                             #         merged_list.append(merged)
                             #         moved_list.append(moved)
                             #         self.score += points
-                            if self.check_moved(moved_list):
+                            if True in moved_list:
                                 self.random2()
                             self.check_lost()
                 else:
@@ -237,16 +237,16 @@ class Game:
         #     if filled_cells == 16:
         #         self.lost = True
 
-    def check_moved(self, moved_list):
-        """
-        checks if at least one square moved
-        :param moved_list: list
-        :return: bool
-        """
-        for item in range(len(moved_list)):
-            if moved_list[item]:
-                return True
-        return False
+    # def check_moved(self, moved_list):
+    #     """
+    #     checks if at least one square moved
+    #     :param moved_list: list
+    #     :return: bool
+    #     """
+    #     for item in range(len(moved_list)):
+    #         if moved_list[item]:
+    #             return True
+    #     return False
 
     def merge_checker(self, merged_list):
         """
@@ -264,7 +264,7 @@ class Game:
         return True
 
     def restart(self):
-        self.grid = []
+        self.grid = [[None for i in range(4)] for j in range(4)]
         self.lost = False
         self.score = 0
         self.create_grid()
