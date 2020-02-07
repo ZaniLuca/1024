@@ -91,3 +91,43 @@ class Square:
                         return False, False, 0
                     return True, False, 0
         return False, False, 0
+
+    def merge(self, grid, move_dir):
+        """
+        merge 2 cells if the have same value
+        :param grid: grid
+        :param move_dir: tuple
+        :return: bool (True if succesfully merged, False instead)
+        :return: int (Points)
+        """
+        if 0 <= self.i + move_dir[0] < 4:
+            if 0 <= self.j + move_dir[1] < 4:
+                cell = grid[self.i + move_dir[0]][self.j + move_dir[1]]
+                if self.value == cell.value and cell.value != 0 and not self.new:
+                    cell.value *= 2
+                    cell.new = True
+                    self.value = 0
+                    pygame.mixer.music.play()
+                    return True, cell.value
+                else:
+                    return False, 0
+
+    def moves(self, grid, move_dir):
+        """
+
+        :param grid:
+        :param move_dir:
+        :return: bool (True if moved, False instead)
+        """
+        if 0 <= self.i + move_dir[0] < 4:
+            if 0 <= self.j + move_dir[1] < 4:
+                cell = grid[self.i + move_dir[0]][self.j + move_dir[1]]
+                if self.value == cell.value and cell.value != 0 and not self.new:
+                    return False
+                elif cell.value == 0:
+                    cell.value = self.value
+                    self.value = 0
+                    if cell.value == 0:
+                        return False
+                    return True
+        return False
