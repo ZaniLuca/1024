@@ -8,7 +8,7 @@ class Square:
     def __init__(self, i, j):
         self.i = i
         self.j = j
-        self.value = 0
+        self.value = 2
         self.new = False
 
     def show(self, W, screen):
@@ -109,8 +109,11 @@ class Square:
                     self.value = 0
                     pygame.mixer.music.play()
                     return True, cell.value
-                else:
+                elif cell.value == 0:
+                    cell.value = self.value
+                    self.value = 0
                     return False, 0
+        return False, 0
 
     def moves(self, grid, move_dir):
         """

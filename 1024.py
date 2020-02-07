@@ -58,35 +58,54 @@ class Game:
                     # TODO resolve merge problem
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
-                            # for line in range(3):
-                            for i in range(len(self.grid)):
-                                for j in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
-                                    move_dir = (0, -1)
-                                    moved, merged, points = self.grid[i][j].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
-                                    moved_list.append(moved)
-                                    self.score += points
-                                # for square in range(len(self.grid)):
-                                #     can_merge = self.merge_checker(merged_list)
-                                #     move_dir = (0, -1)
-                                #     moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                                #     merged_list.append(merged)
-                                #     moved_list.append(moved)
-                                #     self.score += points
+                            for line in range(3):
+                                for i in range(len(self.grid)):
+                                    for j in range(len(self.grid)):
+                                        # can_merge = self.merge_checker(merged_list)
+                                        move_dir = (0, -1)
+
+                                        moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        moved_list.append(moved)
+
+                                        merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        self.score += points
+                                        merged_list.append(merged)
+
+                                        # merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        # self.score += points
+                                        # merged_list.append(merged)
+
+                                        # moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        # moved_list.append(moved)
+                                    #     can_merge = self.merge_checker(merged_list)
+                                    #     move_dir = (0, -1)
+                                    #     moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
+                                    #     merged_list.append(merged)
+                                    #     moved_list.append(moved)
+                                    #     self.score += points
                             if True in moved_list:
                                 self.random2()
-                            self.check_lost()
+                            # self.check_lost()
                         elif event.key == pygame.K_RIGHT:
-                            # for line in range(3):
+                            #for line in range(3):
                             for i in range(len(self.grid)):
                                 for j in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
+                                    # can_merge = self.merge_checker(merged_list)
                                     move_dir = (1, 0)
-                                    moved, merged, points = self.grid[i][j].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+
+                                    moved = self.grid[i][j].moves(self.grid, move_dir)
                                     moved_list.append(moved)
+
+                                    merged, points = self.grid[i][j].merge(self.grid, move_dir)
                                     self.score += points
+                                    merged_list.append(merged)
+
+                                    # merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                    # self.score += points
+                                    # merged_list.append(merged)
+
+                                    # moved = self.grid[i][j].moves(self.grid, move_dir)
+                                    # moved_list.append(moved)
                             #     for square in range(len(self.grid)):
                             #         can_merge = self.merge_checker(merged_list)
                             #         move_dir = (1, 0)
@@ -96,17 +115,28 @@ class Game:
                             #         self.score += points
                             if True in moved_list:
                                 self.random2()
-                            self.check_lost()
+                            #self.check_lost()
                         elif event.key == pygame.K_DOWN:
-                            # for line in range(3):
+                            #for line in range(3):
                             for i in range(len(self.grid)):
                                 for j in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
+                                    # can_merge = self.merge_checker(merged_list)
                                     move_dir = (0, 1)
-                                    moved, merged, points = self.grid[i][j].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
+
+                                    moved = self.grid[i][j].moves(self.grid, move_dir)
                                     moved_list.append(moved)
+
+                                    merged, points = self.grid[i][j].merge(self.grid, move_dir)
                                     self.score += points
+                                    merged_list.append(merged)
+
+                                    # merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                    # self.score += points
+                                    # merged_list.append(merged)
+
+                                    # moved = self.grid[i][j].moves(self.grid, move_dir)
+                                    # moved_list.append(moved)
+
                             #     for square in range(len(self.grid)):
                             #         can_merge = self.merge_checker(merged_list)
                             #         move_dir = (0, 1)
@@ -116,27 +146,37 @@ class Game:
                             #         self.score += points
                             if True in moved_list:
                                 self.random2()
-                            self.check_lost()
+                            # self.check_lost()
                         elif event.key == pygame.K_LEFT:
-                            # for line in range(3):
-                            for i in range(len(self.grid)):
-                                for j in range(len(self.grid)):
-                                    can_merge = self.merge_checker(merged_list)
-                                    move_dir = (-1, 0)
-                                    moved, merged, points = self.grid[i][j].move(self.grid, can_merge, move_dir)
-                                    merged_list.append(merged)
-                                    moved_list.append(moved)
-                                    self.score += points
-                            #     for square in range(len(self.grid)):
-                            #         can_merge = self.merge_checker(merged_list)
-                            #         move_dir = (-1, 0)
-                            #         moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
-                            #         merged_list.append(merged)
-                            #         moved_list.append(moved)
-                            #         self.score += points
+                            for line in range(3):
+                                for i in range(len(self.grid)):
+                                    for j in range(len(self.grid)):
+                                        # can_merge = self.merge_checker(merged_list)
+                                        move_dir = (-1, 0)
+
+                                        moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        moved_list.append(moved)
+
+                                        merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        self.score += points
+                                        merged_list.append(merged)
+
+                                        # merged, points = self.grid[i][j].merge(self.grid, move_dir)
+                                        # self.score += points
+                                        # merged_list.append(merged)
+
+                                        # moved = self.grid[i][j].moves(self.grid, move_dir)
+                                        # moved_list.append(moved)
+                                #     for square in range(len(self.grid)):
+                                #         can_merge = self.merge_checker(merged_list)
+                                #         move_dir = (-1, 0)
+                                #         moved, merged, points = self.grid[square].move(self.grid, can_merge, move_dir)
+                                #         merged_list.append(merged)
+                                #         moved_list.append(moved)
+                                #         self.score += points
                             if True in moved_list:
                                 self.random2()
-                            self.check_lost()
+                            #self.check_lost()
                 else:
                     mouse_pressed = pygame.mouse.get_pressed()
                     pos = pygame.mouse.get_pos()
